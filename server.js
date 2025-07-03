@@ -5,8 +5,7 @@ const router = require("./Router/router")
 const cors = require("cors")
 const session = require("express-session")
 const { isLoggedIn } = require("./middlewares/session")
-const passport = require("passport")
-const strategy = require("passport-google-oauth2").Strategy
+const passport = require('./Auth/passport')
 
 const oneMinute = 60 * 1000
 const oneHour = 60 * oneMinute
@@ -27,28 +26,6 @@ app.use(session({
 app.use(passport.initialize())
 // integrate passport with our session auth
 app.use(passport.session())
-
-
-
-passport.use(new strategy({
-    clientID: process.env.client_id,
-    clientSecret: process.env.client_secret,
-    callbackURL: process.env.redirect_url,
-    // passReqToCallback   : true
-  },
-
-  (request, accessToken, refreshToken, profile, done)=> {
-      return done(err, profile);
-  }
-));
-
-passport.serializeUser((user,done)=>{
-    return done(null,user)
-})
-
-passport.deserializeUser((user,done)=>{
-    return done(null,user)
-})
 
 app.use(router)
 
